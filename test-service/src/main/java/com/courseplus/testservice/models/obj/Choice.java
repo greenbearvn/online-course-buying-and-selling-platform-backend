@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Choice {
+
     @JsonProperty("choiceId")
     private int choiceId;
 

@@ -11,4 +11,8 @@ public interface QuestionService {
     public List<QuestionRes> getQuestionsByTestId(int testId);
 
     public Optional<Question> getDetailQuestion(int testId);
+
+    public Question createQuestion(Question question);
+
+    public Question updateQuestion(int id,Question question);
 }

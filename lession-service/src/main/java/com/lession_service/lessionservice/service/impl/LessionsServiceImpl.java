@@ -9,6 +9,7 @@ import com.lession_service.lessionservice.repository.LessionsRepository;
 import com.lession_service.lessionservice.rest.impl.HttpServiceImpl;
 import com.lession_service.lessionservice.rest.inter.HttpService;
 import com.lession_service.lessionservice.service.inter.LessionsService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,12 +71,20 @@ public class LessionsServiceImpl implements LessionsService {
     }
 
     @Override
-    public Lessions updateLessions(int id, LessionsReq LessionsReq) {
+    @Transactional
+    public Lessions updateLessions(int id, LessionsReq lessionsReq) {
+        Lessions existingLessions = lessionsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Lessions not found with id: " + id));
 
-        Lessions existItem = lessionsRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
-         existItem.builder().lessionId(id).lessionName(LessionsReq.getLessionName()).lessionDuration(LessionsReq.getLessionDuration()).courseId(LessionsReq.getCourseId()).build();
-        return lessionsRepository.save(existItem);
+        // Update the attributes of the existingLessions object
+        existingLessions.setLessionName(lessionsReq.getLessionName());
+        existingLessions.setLessionDuration(lessionsReq.getLessionDuration());
+        existingLessions.setCourseId(lessionsReq.getCourseId());
+
+        // Save the updated entity
+        return lessionsRepository.save(existingLessions);
     }
+
 
     @Override
     public boolean deleteLessions(int id) {

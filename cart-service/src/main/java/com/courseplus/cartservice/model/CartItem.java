@@ -18,20 +18,26 @@ public class CartItem {
     @JsonProperty("courseName")
     private String courseName;
 
-    @JsonProperty("idLevel")
+    @JsonProperty("levelId")
     private int levelId;
 
     @JsonProperty("levelName")
-    private int levelName;
+    private String levelName;
+
+    @JsonProperty("profileId")
+    private int profileId;
+
+    @JsonProperty("profileName")
+    private String  profileName;
 
     @JsonProperty("courseDuration")
     private String courseDuration;
 
-    @JsonProperty("oldPrice")
-    private Double oldPrice;
-
     @JsonProperty("newPrice")
     private Double newPrice;
+
+    @JsonProperty("oldPrice")
+    private Double oldPrice;
 
     @JsonProperty("courseThumbnail")
     private String courseThumbnail;

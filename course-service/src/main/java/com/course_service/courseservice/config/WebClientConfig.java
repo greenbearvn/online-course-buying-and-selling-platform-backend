@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    private final String LESSION_SERVICE_URL_BASE= "http://localhost:8085/api/v1/lessions";
+    private final String LESSION_SERVICE_URL_BASE= "http://localhost:8085/api/lessions";
 
     private final String DETAIL_CATE_SERVICE_URL_BASE= "http://localhost:8083/api/detailcates";
 

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/detailcollection")
 @RequiredArgsConstructor
@@ -18,9 +20,9 @@ public class DetailCollectionCotroller {
     private final DetailCollectionService detailCollectionService;
 
     @GetMapping("/detail/{collectionId}/{courseid}")
-    public ResponseEntity<DetailCollection> getDetailCourses(@PathVariable("collectionId") int collectionId,@PathVariable("courseid") int courseId) {
+    public ResponseEntity<List<DetailCollection>> getDetailCourses(@PathVariable("collectionId") int collectionId, @PathVariable("courseid") int courseId) {
 
-        DetailCollection detailCollection = detailCollectionService.getDetailCollectionByCollectionIdAndCourseId(collectionId, courseId);
+        List<DetailCollection> detailCollection = detailCollectionService.getDetailCollectionByCollectionIdAndCourseId(collectionId, courseId);
         return ResponseEntity.ok().body(detailCollection);
 
     }

@@ -8,4 +8,6 @@ import java.util.List;
 public interface TestRepository extends JpaRepository<Test, Integer> {
 
     public List<Test> findAllByVideoId(int videoId);
+
+    public List<Test> findAllByTeacherId(int teacherId);
 }

@@ -23,8 +23,8 @@ public class Question {
     @Column(name = "testId", nullable = false)
     private int testId;
     @Column(name = "questionDescription", length=500)
-
     private String questionDescription;
+
     @Column(name = "suggestion", length=500)
     private String suggestion;
 }

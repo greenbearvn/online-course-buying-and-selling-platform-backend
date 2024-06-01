@@ -73,14 +73,21 @@ public class VideosServiceImpl implements VideosService {
     @Override
     @Transactional
     public Videos updateVideos(int id, VideoReq videoReq) {
-        Videos existItem = videosRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
-        existItem.builder().videoName(videoReq.getVideoName())
-                .videoContent(videoReq.getVideoContent())
-                .videoLink(videoReq.getVideoLink())
-                .videoDuration(videoReq.getVideoDuration())
-                .lessionId(videoReq.getLessionId()).build();
-        return videosRepository.save(existItem);
+        // Retrieve the existing Videos entity from the repository using its ID
+        Videos existingVideo = videosRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Video not found with id: " + id));
+
+        // Update the attributes of the existing Video entity with values from videoReq
+        existingVideo.setVideoName(videoReq.getVideoName());
+        existingVideo.setVideoContent(videoReq.getVideoContent());
+        existingVideo.setVideoLink(videoReq.getVideoLink());
+        existingVideo.setVideoDuration(videoReq.getVideoDuration());
+        existingVideo.setLessionId(videoReq.getLessionId());
+
+        // Save the updated entity back to the repository
+        return videosRepository.save(existingVideo);
     }
+
 
     @Override
     @Transactional

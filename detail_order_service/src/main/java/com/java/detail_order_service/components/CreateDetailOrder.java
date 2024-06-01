@@ -27,9 +27,16 @@ public class CreateDetailOrder {
         try {
             OrderEvent orderEvent = objectMapper.readValue(event, OrderEvent.class);
 
+            OrderInfor orderInfor = orderEvent.getOrder();
+
             Map<String, DetailOrder> detailOrderMap = orderEvent.getDetailOrder();
 
-            detailOrderMap.forEach((key, value) -> detailOrderService.createDetailOrder(value));
+            System.out.println(detailOrderMap);
+
+            detailOrderMap.forEach((key, value) -> {
+                value.setOrderId(orderInfor.getOrderId());
+                detailOrderService.createDetailOrder(value);
+            });
 
         } catch (JsonProcessingException e) {
             // Handle JSON processing exception

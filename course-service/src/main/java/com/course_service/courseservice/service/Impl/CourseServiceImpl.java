@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,15 +41,8 @@ public class CourseServiceImpl implements CoursesService {
 
     private final HttpService httpBinService;
     private final String UPLOAD_DIR = "D:\\Data\\FinalProject\\JavaMicroservices\\course-service\\uploads";
-    private final String BASE_URL_DISPLAY_IMG = "http://localhost:8084/api/v1/courses/display/";
+    private final String BASE_URL_DISPLAY_IMG = "http://localhost:8084/api/courses/display/";
 
-    @Override
-    public List<Courses> getCoursesPagination(int page, int size, String sortBy) {
-        Sort sort = Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size,sort);
-        List<Courses> courses =  coursesRepository.findAll(pageable).getContent();
-        return courses;
-    }
 
     @Override
     public List<Courses> getAllCourses() {
@@ -56,17 +51,29 @@ public class CourseServiceImpl implements CoursesService {
 
 
     @Override
-    public CourseRes getCoursesById(int id) {
+    public Mono<CourseRes> getCoursesById(int id) {
 
-        List<LessionRes> lessionRes = httpBinService.getLessions(id).collectList().block();
-        Courses courses = coursesRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        DetailCate detailCate = httpBinService.getDetailCate(courses.getIdDetailCate()).block();
-        Levels levels = httpBinService.getLevelOfCourse(courses.getIdLevel()).block();
-        Profile profile = httpBinService.getDetailTeacherOfCourse(courses.getProfileId()).block();
+        Mono<Courses> courseMono = Mono.just(coursesRepository.findById(id).orElseThrow());
+        Flux<LessionRes> lessionResFlux = httpBinService.getLessions(id);
+        Mono<DetailCate> detailCateMono = httpBinService.getDetailCate(id);
+        Mono<Levels> levelsMono = httpBinService.getLevelOfCourse(id);
+        Mono<Profile> profileMono = httpBinService.getDetailTeacherOfCourse(id);
 
-        CourseRes courseRes = CourseRes.fromCourseRes(courses, lessionRes,detailCate,levels,profile);
+        return Mono.zip(courseMono, lessionResFlux.collectList(), detailCateMono, levelsMono, profileMono)
+                .map(tuple -> {
+                    CourseRes courseRes = new CourseRes();
+                    courseRes.setCourses(tuple.getT1());
+                    courseRes.setLessionRes(tuple.getT2());
+                    courseRes.setDetailCate(tuple.getT3());
+                    courseRes.setLevels(tuple.getT4());
+                    courseRes.setProfile(tuple.getT5());
+                    return courseRes;
+                });
+    }
 
-        return courseRes;
+    @Override
+    public Courses detail(int id) {
+        return coursesRepository.findById(id).get();
     }
 
 
@@ -88,6 +95,8 @@ public class CourseServiceImpl implements CoursesService {
                 .newPrice(newPrice)
                 .idLevel(coursesReq.getIdLevel())
                 .idDetailCate(coursesReq.getIdDetailCate())
+                .status(coursesReq.getStatus())
+                .profileId(coursesReq.getProfileId())
                 .build();
         return coursesRepository.save(newItem);
     }
@@ -100,18 +109,20 @@ public class CourseServiceImpl implements CoursesService {
         Courses existItem = coursesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        return existItem.builder().courseId(id).courseName(coursesReq.getCourseName())
-                .courseThumbnail(coursesReq.getCourseThumbnail())
-                .shortDes(coursesReq.getShortDes())
-                .fullDes(coursesReq.getFullDes())
-                .timePublished(coursesReq.getTimePublished())
-                .courseDuration(coursesReq.getCourseDuration())
-                .oldPrice(coursesReq.getOldPrice())
-                .percentSale(coursesReq.getPercentSale())
-                .newPrice(newPrice)
-                .idLevel(coursesReq.getIdLevel())
-                .idDetailCate(coursesReq.getIdDetailCate())
-                .build();
+        existItem.setCourseId(id);
+        existItem.setCourseName(coursesReq.getCourseName());
+        existItem.setCourseThumbnail(coursesReq.getCourseThumbnail());
+        existItem.setShortDes(coursesReq.getShortDes());
+        existItem.setFullDes(coursesReq.getFullDes());
+        existItem.setTimePublished(coursesReq.getTimePublished());
+        existItem.setCourseDuration(coursesReq.getCourseDuration());
+        existItem.setOldPrice(coursesReq.getOldPrice());
+        existItem.setPercentSale(coursesReq.getPercentSale());
+        existItem.setNewPrice(newPrice);
+        existItem.setIdLevel(coursesReq.getIdLevel());
+        existItem.setIdDetailCate(coursesReq.getIdDetailCate());
+
+        return coursesRepository.save(existItem);
     }
 
     @Override

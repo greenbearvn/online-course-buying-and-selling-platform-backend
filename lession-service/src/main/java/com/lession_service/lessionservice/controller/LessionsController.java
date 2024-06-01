@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/lessions")
+@RequestMapping("/api/lessions")
 public class LessionsController {
 
     private final LessionsService lessionsService;
@@ -51,7 +51,7 @@ public class LessionsController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Lessions> editLessions(@RequestParam("id") int id ,@RequestBody LessionsReq lessionsReq) {
+    public ResponseEntity<Lessions> editLessions(@PathVariable("id") int id ,@RequestBody LessionsReq lessionsReq) {
 
         Lessions updatedItem = lessionsService.updateLessions(id, lessionsReq);
 
@@ -60,7 +60,7 @@ public class LessionsController {
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete/{id}")
-    public boolean deleteLessions(@RequestParam("id") int id ) {
+    public boolean deleteLessions(@PathVariable("id") int id ) {
 
         boolean status = lessionsService.deleteLessions(id);
 

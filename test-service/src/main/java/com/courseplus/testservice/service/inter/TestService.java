@@ -10,13 +10,15 @@ public interface TestService {
 
     public List<Test> getAllTest();
 
+    public List<Test> getAllbyTeacherId(int teacherId);
+
     public TestRes getTestById(int id);
 
     public List<Test> getTestsbyVideoId(int videoId);
 
-    public Test createTest(TestReq TestReq);
+    public boolean createTest(TestReq TestReq);
 
-    public Test updateTest(int id,TestReq TestReq);
+    public boolean updateTest(int id,TestReq TestReq);
 
     public boolean deleteTest(int id);
 }

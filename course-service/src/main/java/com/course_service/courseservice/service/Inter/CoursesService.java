@@ -6,16 +6,21 @@ import com.course_service.courseservice.models.req.CoursesReq;
 import com.course_service.courseservice.models.res.CourseRes;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface CoursesService {
-    public List<Courses> getCoursesPagination(int page, int size, String sortBy);
-
     public List<Courses> getAllCourses();
 
-    public CourseRes getCoursesById(int id);
+
+//    public CourseRes getCoursesById(int id);
+
+    public Mono<CourseRes> getCoursesById(int id);
+
+    public Courses detail(int id);
 
     public Courses createCourses(CoursesReq coursesReq);
 

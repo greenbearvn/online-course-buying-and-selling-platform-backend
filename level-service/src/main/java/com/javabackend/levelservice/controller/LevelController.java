@@ -23,11 +23,6 @@ public class LevelController {
         return ResponseEntity.ok().body(levels);
     }
 
-    @GetMapping("/pagination")
-    public ResponseEntity<List<Levels>> getLevelPagination(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sortBy") String sortBy) {
-        List<Levels> levels =  levelsService.getLevelPagination(page, size, sortBy);
-        return ResponseEntity.ok().body(levels);
-    }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<Levels> getDetailLevel(@PathVariable("id") int id) {
@@ -45,7 +40,7 @@ public class LevelController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Levels> editLevel(@RequestParam("id") int id ,@RequestBody LevelReq levels) {
+    public ResponseEntity<Levels> editLevel(@PathVariable("id") int id ,@RequestBody LevelReq levels) {
 
         Levels updateLevels = levelsService.updateLevel(id, levels);
 
@@ -54,7 +49,7 @@ public class LevelController {
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete/{id}")
-    public boolean deleteLevel(@RequestParam("id") int id ) {
+    public boolean deleteLevel(@PathVariable("id") int id ) {
 
         boolean status = levelsService.deleteLevel(id);
 

@@ -6,6 +6,7 @@ import com.courseplus.questionservice.models.res.QuestionRes;
 import com.courseplus.questionservice.repository.QuestionRepository;
 import com.courseplus.questionservice.rest.inter.HttpService;
 import com.courseplus.questionservice.service.inter.QuestionService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,23 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Optional<Question> getDetailQuestion(int testId) {
         return questionRepository.findById(testId);
+    }
+
+    @Override
+    @Transactional
+    public Question createQuestion(Question question) {
+        return questionRepository.save(question);
+    }
+
+    @Override
+    public Question updateQuestion(int id,Question quesReq) {
+        Question question = questionRepository.findById(id).orElseThrow();
+        question.setTestId(quesReq.getTestId());
+        question.setQuestionId(quesReq.getQuestionId());
+        question.setQuestionDescription(quesReq.getQuestionDescription());
+        question.setSuggestion(quesReq.getSuggestion());
+
+        return questionRepository.save(question);
     }
 
 

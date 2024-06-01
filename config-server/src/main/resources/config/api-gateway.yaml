@@ -11,8 +11,6 @@ management:
     sampling:
       probability: 1.0
 
-
-
 spring:
   cloud:
     gateway:
@@ -20,12 +18,69 @@ spring:
         - id: course-service
           uri: http://localhost:8084/
           predicates:
-            - Path=/courses/**
+            - Path=/api/courses/**
+
+        - id: category-service
+          uri: http://localhost:8082/
+          predicates:
+            - Path=/api/categories/**
+
+        - id: lession-service
+          uri: http://localhost:8085/
+          predicates:
+            - Path=/api/lessions/**
+
+        - id: video-service
+          uri: http://localhost:8086/
+          predicates:
+            - Path=/api/v1/videos/**
+
+        - id: level-service
+          uri: http://localhost:8086/
+          predicates:
+            - Path=/api/v1/videos/**
+
         - id: detail-cate-service
           uri: http://localhost:8083/
           predicates:
             - Path=/api/detailcates/**
+
+        - id: blog-service
+          uri: http://localhost:8096/
+          predicates:
+            - Path=/api/v1/blog/**
+
+        - id: user-service
+          uri: http://localhost:8099/
+          predicates:
+            - Path=/api/user/**
+
+        - id: test-service
+          uri: http://localhost:8092/
+          predicates:
+            - Path=/api/test/**
+
         - id: profile-service
           uri: http://localhost:8095/
           predicates:
             - Path=/api/profile/**
+
+        - id: cart-service
+          uri: http://localhost:8097/
+          predicates:
+            - Path=/api/cart/**
+
+        - id: video-service
+          uri: http://localhost:8086/
+          predicates:
+            - Path=/api/v1/videos/**
+
+        - id: choice-service
+          uri: http://localhost:8094/
+          predicates:
+            - Path=/api/v1/choice/**
+
+        - id: order-service
+          uri: http://localhost:8089/
+          predicates:
+            - Path=/api/v1/order/**

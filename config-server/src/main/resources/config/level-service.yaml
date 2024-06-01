@@ -6,6 +6,20 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/levels?useSSL=false
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+
+  flyway:
+    baseline-on-migrate: true
+
 # config for zipkin
 management:
   tracing:

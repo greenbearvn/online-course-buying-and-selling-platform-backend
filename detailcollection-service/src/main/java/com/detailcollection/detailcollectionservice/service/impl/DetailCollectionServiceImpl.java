@@ -6,6 +6,8 @@ import com.detailcollection.detailcollectionservice.service.inter.DetailCollecti
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class DetailCollectionServiceImpl implements DetailCollectionService {
     }
 
     @Override
-    public DetailCollection getDetailCollectionByCollectionIdAndCourseId(int collectionId, int courseId) {
+    public List<DetailCollection> getDetailCollectionByCollectionIdAndCourseId(int collectionId, int courseId) {
         return detailCollectionRepository.findDetailCollectionByCollectionIdAndCourseId(collectionId, courseId);
     }
 }

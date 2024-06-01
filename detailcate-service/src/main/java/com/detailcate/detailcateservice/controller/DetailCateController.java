@@ -30,11 +30,6 @@ public class DetailCateController {
         return ResponseEntity.ok(detailCates);
     }
 
-    @GetMapping("/pagination")
-    public ResponseEntity<List<DetailCates>> getDetailCatesPagination(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sortBy") String sortBy) {
-        List<DetailCates> DetailCates =  detailCatesService.getCategoryPagination(page, size, sortBy);
-        return ResponseEntity.ok().body(DetailCates);
-    }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<DetailCates> getDetailDetailCates(@PathVariable("id") int id) {
@@ -52,7 +47,7 @@ public class DetailCateController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<DetailCates> editDetailCates(@RequestParam("id") int id , @RequestBody DetailCateReq detailCateReq) {
+    public ResponseEntity<DetailCates> editDetailCates(@PathVariable("id") int id , @RequestBody DetailCateReq detailCateReq) {
 
         DetailCates updateDetailCates = detailCatesService.updateDetailCates(id, detailCateReq);
 
@@ -61,7 +56,7 @@ public class DetailCateController {
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete/{id}")
-    public boolean deleteDetailCates(@RequestParam("id") int id ) {
+    public boolean deleteDetailCates(@PathVariable("id") int id ) {
 
         boolean status = detailCatesService.deleteDetailCates(id);
 

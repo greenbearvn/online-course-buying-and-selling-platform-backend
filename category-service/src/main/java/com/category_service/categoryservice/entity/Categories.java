@@ -22,4 +22,8 @@ public class Categories {
     @Column(name = "categoryName" , length=500, nullable=false, unique=false)
     private String categoryName;
 
+    @Column(name = "image" , length=1000)
+    private String image;
+
+
 }

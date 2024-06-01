@@ -41,4 +41,10 @@ public class CoursesReq {
 
     @JsonProperty("idDetailCate")
     private int idDetailCate;
+
+    @JsonProperty("status")
+    private int status;
+
+    @JsonProperty("profileId")
+    private int profileId;
 }

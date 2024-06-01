@@ -4,6 +4,7 @@ import com.course_service.courseservice.entity.Courses;
 import com.course_service.courseservice.models.req.CartItem;
 import com.course_service.courseservice.models.req.CoursesReq;
 import com.course_service.courseservice.models.res.CourseRes;
+import com.course_service.courseservice.models.res.ImageRes;
 import com.course_service.courseservice.service.Inter.CartService;
 import com.course_service.courseservice.service.Inter.CoursesService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,7 +29,6 @@ public class CoursesController {
 
     private final CartService cartService;
 
-
     @GetMapping("/list")
     public ResponseEntity<List<Courses>> getAllCategories() {
         List<Courses> items =  coursesService.getAllCourses();
@@ -40,17 +41,14 @@ public class CoursesController {
         return ResponseEntity.ok().body(items);
     }
 
-    @GetMapping("/pagination")
-    public ResponseEntity<List<Courses>> getCoursesPagination(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sortBy") String sortBy) {
-        List<Courses> items =  coursesService.getCoursesPagination(page, size, sortBy);
-        return ResponseEntity.ok().body(items);
-    }
-
     @GetMapping("/detail/{id}")
-    public ResponseEntity<CourseRes> getDetailCourses(@PathVariable int id) {
-
-        CourseRes item =  coursesService.getCoursesById(id);
-        return ResponseEntity.ok().body(item);
+    public Object getDetailCourses(@PathVariable int id) {
+        try {
+            Mono<CourseRes> item = coursesService.getCoursesById(id);
+            return ResponseEntity.ok().body(item.block());
+        } catch (Exception e) {
+            return  coursesService.detail(id);
+        }
 
     }
 
@@ -62,14 +60,17 @@ public class CoursesController {
 
     }
 
-    @PostMapping("/uploadImage")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+    @PostMapping(value = "/uploadImage")
+    public ImageRes uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
 
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
         String url = coursesService.uploadFile(fileName,multipartFile);
 
-        return ResponseEntity.ok().body(url);
+        ImageRes imageRes = new ImageRes();
+        imageRes.setData(url);
+
+        return imageRes;
     }
 
     @GetMapping("/display/{fileCode}")
@@ -84,7 +85,7 @@ public class CoursesController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Courses> editCourses(@RequestParam("id") int id ,@RequestBody CoursesReq coursesReq) {
+    public ResponseEntity<Courses> editCourses(@PathVariable("id") int id ,@RequestBody CoursesReq coursesReq) {
 
         Courses updatedItem = coursesService.updateCourses(id, coursesReq);
 
@@ -93,7 +94,7 @@ public class CoursesController {
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete/{id}")
-    public boolean deleteCourses(@RequestParam("id") int id ) {
+    public boolean deleteCourses(@PathVariable("id") int id ) {
 
         boolean status = coursesService.deleteCourses(id);
 

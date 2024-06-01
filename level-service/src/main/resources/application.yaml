@@ -3,15 +3,3 @@ spring:
     name: level-service
   config:
      import: optional:configserver:http://localhost:8088
-  datasource:
-     url: jdbc:mysql://localhost:3306/levels?useSSL=false
-     username: root
-     password: root
-  jpa:
-    hibernate:
-       ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
-
-  flyway:
-    baseline-on-migrate: true

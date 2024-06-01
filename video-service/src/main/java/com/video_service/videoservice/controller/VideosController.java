@@ -50,7 +50,7 @@ public class VideosController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Videos> editVideos(@RequestParam("id") int id ,@RequestBody VideoReq videoReq) {
+    public ResponseEntity<Videos> editVideos(@PathVariable("id") int id ,@RequestBody VideoReq videoReq) {
 
         Videos updatedItem = videosService.updateVideos(id, videoReq);
 
@@ -59,7 +59,7 @@ public class VideosController {
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete/{id}")
-    public boolean deleteVideos(@RequestParam("id") int id ) {
+    public boolean deleteVideos(@PathVariable("id") int id ) {
 
         boolean status = videosService.deleteVideos(id);
 

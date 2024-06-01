@@ -12,6 +12,7 @@
         <module name="question-service" />
         <module name="test-service" />
         <module name="profile-service" />
+        <module name="user-service" />
         <module name="detailcollection-service" />
         <module name="course-service" />
         <module name="config-server" />
@@ -31,6 +32,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="chat-service" target="17" />
       <module name="department-service" target="17" />
       <module name="patient-service" target="17" />
     </bytecodeTargetLevel>
@@ -42,6 +44,7 @@
       <module name="blog-service" options="-parameters" />
       <module name="cart-service" options="-parameters" />
       <module name="category-service" options="-parameters" />
+      <module name="chat-service" options="-parameters" />
       <module name="choice-service" options="-parameters" />
       <module name="collection-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
@@ -59,6 +62,7 @@
       <module name="question-service" options="-parameters" />
       <module name="service-registry" options="-parameters" />
       <module name="test-service" options="-parameters" />
+      <module name="user-service" options="-parameters" />
       <module name="video-service" options="-parameters" />
     </option>
   </component>

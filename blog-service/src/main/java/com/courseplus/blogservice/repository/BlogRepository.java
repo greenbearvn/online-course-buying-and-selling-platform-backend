@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface BlogRepository extends JpaRepository<Blog,Integer> {
 
-    @Query(value = "SELECT * FROM Blog p WHERE p.status > 0", nativeQuery = true)
-    public List<Blog> getBlogsIsPublished();
+    @Query(value = "SELECT * FROM blog ORDER BY date_publish", nativeQuery = true)
+    List<Blog> getNewBlog();
+
+    List<Blog> findAllByCateid(int categoryid);
 }

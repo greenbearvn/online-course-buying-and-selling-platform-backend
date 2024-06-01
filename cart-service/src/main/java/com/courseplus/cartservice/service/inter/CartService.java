@@ -5,7 +5,7 @@ import com.courseplus.cartservice.model.CartItem;
 import java.util.Map;
 
 public interface CartService {
-    public void addCart( CartItem cartItem);
+    public boolean addCart( CartItem cartItem);
 
 
     public Map getCartItems();

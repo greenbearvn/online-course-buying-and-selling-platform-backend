@@ -11,4 +11,6 @@ public interface ChoiceService {
     public Choice getDetailChoice(int choiceId);
 
     public boolean isCorrected(Choice choice);
+
+    public Choice createChoice(Choice choice);
 }

@@ -14,6 +14,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -31,19 +32,24 @@ public class DetailCollectionEvent {
             CollectionEvent collectionEvent = objectMapper.readValue(event, CollectionEvent.class);
 
             Map<String, DetailOrder> detailOrderMap = collectionEvent.getDetailOrder();
+            int collectionId = collectionEvent.getCollections().getCollectionId();
 
             for (Map.Entry<String, DetailOrder> entry : detailOrderMap.entrySet()) {
-                String key = entry.getKey();
+
                 DetailOrder value = entry.getValue();
+                List<DetailCollection> detailCollection = detailCollectionService.getDetailCollectionByCollectionIdAndCourseId(collectionId, value.getCourseId());
 
-                Date date = new Date();
-                DetailCollection detailCollection = DetailCollection.builder()
-                        .collectionId(collectionEvent.getCollections().getCollectionId())
-                        .courseId(value.getCourseId())
-                        .createDate(date)
-                        .build();
+                if (detailCollection.isEmpty()) {
+                    // Create a new detail collection only if it doesn't exist
+                    Date date = new Date();
+                    DetailCollection newDetailCollection = DetailCollection.builder()
+                            .collectionId(collectionId)
+                            .courseId(value.getCourseId())
+                            .createDate(date)
+                            .build();
 
-                detailCollectionService.createDetailCollection(detailCollection);
+                    detailCollectionService.createDetailCollection(newDetailCollection);
+                }
             }
 
         } catch (JsonProcessingException e) {

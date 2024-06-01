@@ -34,27 +34,24 @@ public class OrderServiceImpl implements  OrderService{
                 .createAt(orderInfor.getCreateAt())
                 .moneyTotal(orderInfor.getMoneyTotal())
                 .build();
-
+        Map<String, DetailOrder> newDetailOrder = new HashMap<String, DetailOrder>();
         CollectionRes collectionRes = orderHttpService.getCollectionByUserId(orderInfor.getUserId()).block();
 
-        Map<String, DetailOrder> newDetailOrder = new HashMap<String, DetailOrder>();
-
-        orderInfor.getDetailOrder().forEach((key, value) -> {
-            DetailCollectionRes detailCollectionRes = orderHttpService.getDetailCollections(collectionRes.getCollectionId(), value.getCourseId()).block();
-            if (detailCollectionRes != null) {
-                newDetailOrder.put(key, value);
-            }
-        });
-
+//      if(collectionRes != null){
+//          orderInfor.getDetailOrder().forEach((key, value) -> {
+//              DetailCollectionRes detailCollectionRes = orderHttpService.getDetailCollections(collectionRes.getCollectionId(), value.getCourseId()).block();
+//              if (detailCollectionRes != null) {
+//                  newDetailOrder.put(key, value);
+//              }
+//          });
+//      }
 
         newOrder = orderRepository.save(newOrder);
-
-
         orderInfor.setOrderId(newOrder.getOrderId());
 
         OrderEvent event = new OrderEvent(); /// Khởi tạo đối tượng event của đơn hàng
         event.setOrder(orderInfor);
-        event.setDetailOrder(newDetailOrder);
+        event.setDetailOrder(orderInfor.getDetailOrder());
         event.setType("ORDER_CREATED");
         kafkaTemplate.send("new-order", event);
     }

@@ -10,6 +10,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -25,7 +26,7 @@ public class HttpServiceImpl implements HttpService {
 
     private final WebClient profileWebClient;
     @Override
-    @CircuitBreaker(name = "lession-service", fallbackMethod = "handleNotFoundLessionService")
+    @CircuitBreaker(name = "lession-service")
     public Flux<LessionRes> getLessions(int courseId) {
         Flux<LessionRes> lessionResFlux = lessionWebClient.get()
                 .uri("/course/" + courseId)
@@ -34,9 +35,11 @@ public class HttpServiceImpl implements HttpService {
         return lessionResFlux;
     }
 
-    private LessionRes handleNotFoundLessionService( Throwable throwable) {
-        return new LessionRes();
+    private Flux<LessionRes> handleNotFoundLessionService(Throwable throwable) {
+
+        return Flux.error(new Exception());
     }
+
 
     @Override
     @CircuitBreaker(name = "detailcate-service")

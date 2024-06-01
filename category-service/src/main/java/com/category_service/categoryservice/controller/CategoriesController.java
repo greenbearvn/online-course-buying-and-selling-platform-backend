@@ -4,17 +4,22 @@ import com.category_service.categoryservice.client.DetailCateClient;
 import com.category_service.categoryservice.entity.Categories;
 import com.category_service.categoryservice.model.req.CategoryReq;
 import com.category_service.categoryservice.model.res.CategoryRes;
+import com.category_service.categoryservice.model.res.ImageRes;
 import com.category_service.categoryservice.service.inter.CategoriesService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/categories")
 public class CategoriesController {
     
     private final CategoriesService categoriesService;
@@ -37,6 +42,24 @@ public class CategoriesController {
         return ResponseEntity.ok().body(Category);
     }
 
+    @PostMapping(value = "/uploadImage")
+    public ImageRes uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+        String url = categoriesService.uploadFile(fileName,multipartFile);
+
+        ImageRes imageRes = new ImageRes();
+        imageRes.setData(url);
+
+        return imageRes;
+    }
+
+    @GetMapping("/display/{fileCode}")
+    public void displayImage(@PathVariable String fileCode, HttpServletResponse response) throws IOException {
+        categoriesService.displayFile(fileCode, response);
+    }
+
 
         @PostMapping("/create")
     public ResponseEntity<Categories> createCategory(@RequestBody CategoryReq categoryReq) {
@@ -47,7 +70,7 @@ public class CategoriesController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Categories> editCategory(@RequestParam("id") int id ,@RequestBody CategoryReq categoryReq) {
+    public ResponseEntity<Categories> editCategory(@PathVariable("id") int id ,@RequestBody CategoryReq categoryReq) {
 
         Categories updateCategories = categoriesService.updateCategory(id, categoryReq);
 
@@ -56,7 +79,7 @@ public class CategoriesController {
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete/{id}")
-    public boolean deleteCategory(@RequestParam("id") int id ) {
+    public boolean deleteCategory(@PathVariable("id") int id ) {
 
         boolean status = categoriesService.deleteCategory(id);
 

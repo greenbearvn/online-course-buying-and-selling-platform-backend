@@ -24,10 +24,10 @@ public class Blog {
     @Column(name = "blogName", length=500, nullable=false)
     private String blogName;
 
-    @Column(name = "content", length=500)
+    @Column(name = "content")
     private String content;
 
-    @Column(name = "thumnail", length=500, nullable=false)
+    @Column(name = "thumnail")
     private String thumnail;
 
     @Column(name = "datePublish")

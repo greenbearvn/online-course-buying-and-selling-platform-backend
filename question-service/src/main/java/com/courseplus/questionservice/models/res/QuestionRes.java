@@ -25,6 +25,7 @@ public class QuestionRes {
     @JsonProperty("suggestion")
     private String suggestion;
 
+    @JsonProperty("choices")
     private List<Choice> choices;
 
     public static QuestionRes questionResBuider(Question question, List<Choice> choices){

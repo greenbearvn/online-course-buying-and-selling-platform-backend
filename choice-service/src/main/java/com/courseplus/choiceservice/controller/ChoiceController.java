@@ -24,7 +24,7 @@ public class ChoiceController {
         return  choiceService.getDetailChoice(choiceId);
     }
 
-    @GetMapping("/check")
+    @PostMapping("/check")
     public boolean checkChoiceCorrected(@RequestBody Choice choiceReq) {
         return choiceService.isCorrected(choiceReq);
     }

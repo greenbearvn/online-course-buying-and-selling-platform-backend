@@ -10,4 +10,7 @@ public class CategoryReq {
 
     @JsonProperty(value = "categoryName")
     private String categoryName;
+
+    @JsonProperty(value = "image")
+    private String image;
 }

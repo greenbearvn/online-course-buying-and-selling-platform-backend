@@ -2,13 +2,17 @@ package com.courseplus.testservice.controller;
 
 
 import com.courseplus.testservice.entity.Test;
+import com.courseplus.testservice.models.obj.Choice;
+import com.courseplus.testservice.models.obj.Question;
 import com.courseplus.testservice.models.req.TestReq;
 import com.courseplus.testservice.models.res.TestRes;
 import com.courseplus.testservice.service.inter.TestService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,6 +25,12 @@ public class TestController {
     @GetMapping("/list")
     public ResponseEntity<List<Test>> getAllCategories() {
         List<Test> items =  testService.getAllTest();
+        return ResponseEntity.ok().body(items);
+    }
+
+    @GetMapping("/list/teacher/{id}")
+    public ResponseEntity<List<Test>> getAllByTeacherId(@PathVariable("id") int teacherId) {
+        List<Test> items =  testService.getAllbyTeacherId(teacherId);
         return ResponseEntity.ok().body(items);
     }
 
@@ -37,23 +47,31 @@ public class TestController {
         return ResponseEntity.ok().body(item);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Test> createTest(@RequestBody TestReq TestReq) {
-        Test newItem = testService.createTest(TestReq);
-        return ResponseEntity.ok().body(newItem);
+    @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public boolean createTest(@RequestBody TestReq testReq) {
+       return testService.createTest(testReq);
+    }
+
+    @PostMapping(path = "/create/test", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<Choice> createTestdta(@RequestBody TestReq testReq) {
+        List<Choice> allChoices = new ArrayList<>();
+        for (Question question : testReq.getQuestions()) {
+            allChoices.addAll(question.getChoices());
+        }
+
+        return allChoices;
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Test> editTest(@RequestParam("id") int id ,@RequestBody TestReq TestReq) {
+    public boolean editTest(@PathVariable("id") int id ,@RequestBody TestReq TestReq) {
 
-        Test updatedItem = testService.updateTest(id, TestReq);
+        return testService.updateTest(id, TestReq);
 
-        return  ResponseEntity.ok().body(updatedItem);
     }
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete/{id}")
-    public boolean deleteTest(@RequestParam("id") int id ) {
+    public boolean deleteTest(@PathVariable("id") int id ) {
 
         boolean status = testService.deleteTest(id);
 

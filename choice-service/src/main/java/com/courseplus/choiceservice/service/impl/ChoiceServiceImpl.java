@@ -5,6 +5,7 @@ import com.courseplus.choiceservice.model.obj.Question;
 import com.courseplus.choiceservice.repository.ChoiceRepository;
 import com.courseplus.choiceservice.rest.inter.HttpService;
 import com.courseplus.choiceservice.service.inter.ChoiceService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,17 @@ public class ChoiceServiceImpl implements ChoiceService {
             }
         }
         return false;
+    }
+
+    @Override
+    @Transactional
+    public Choice createChoice(Choice choiceReq) {
+
+        Choice choice = new Choice();
+        choice.setQuestionId(choiceReq.getQuestionId());
+        choice.setChoiceContent(choiceReq.getChoiceContent());
+        choice.setCorrected(choiceReq.getCorrected());
+        return choiceRepository.save(choice);
     }
 
 }

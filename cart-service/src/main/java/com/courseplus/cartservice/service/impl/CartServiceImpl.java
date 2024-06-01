@@ -15,18 +15,26 @@ public class CartServiceImpl implements CartService {
 
     private final BaseRedisRepository baseRedisRepository;
 
-    private final String KEY = "cart";
+    private final String KEY = "new_cart";
     @Override
-    public void addCart(CartItem cartItem) {
-        if(baseRedisRepository.isMapEmpty(KEY)) {
-            Map<String,CartItem> map = new HashMap<String,CartItem>();
-            map.put( "id"+cartItem.getCourseId(), cartItem);
-            baseRedisRepository.saveListData(KEY,map);
+    public boolean addCart(CartItem cartItem) {
+        try{
+            if(baseRedisRepository.isMapEmpty(KEY)) {
+                Map<String,CartItem> map = new HashMap<String,CartItem>();
+                map.put( "id"+cartItem.getCourseId(), cartItem);
+                baseRedisRepository.saveListData(KEY,map);
+            }
+
+            if(!baseRedisRepository.isMapEmpty(KEY)){
+                baseRedisRepository.addValueToMap(KEY,"id"+cartItem.getCourseId(),cartItem);
+            }
+
+            return true;
+        }
+        catch (Exception e){
+            return false;
         }
 
-        if(!baseRedisRepository.isMapEmpty(KEY)){
-            baseRedisRepository.addValueToMap(KEY,"id"+cartItem.getCourseId(),cartItem);
-        }
     }
 
     @Override

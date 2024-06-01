@@ -15,11 +15,11 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/addCart")
-    public void addCart(@RequestBody CartItem cartItem ) {
-        cartService.addCart(cartItem);
+    public boolean addCart(@RequestBody CartItem cartItem ) {
+        return cartService.addCart(cartItem);
     }
 
-    @GetMapping("/list/cart")
+    @GetMapping("/list")
     public Map getList() {
         return cartService.getCartItems();
     }

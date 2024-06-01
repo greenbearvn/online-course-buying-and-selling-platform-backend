@@ -31,7 +31,7 @@ public class Profile {
     @Column(name = "avatar" , length=500, nullable=false)
     private String avatar;
 
-    @Column(name = "desciption" , length=500, nullable=false)
+    @Column(name = "desciption" )
     private String desciption;
 
     @Column(name = "cateId" ,  nullable=false)
