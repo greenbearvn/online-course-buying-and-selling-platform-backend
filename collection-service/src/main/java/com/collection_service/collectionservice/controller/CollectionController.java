@@ -2,13 +2,13 @@ package com.collection_service.collectionservice.controller;
 
 
 import com.collection_service.collectionservice.entity.Collections;
+import com.collection_service.collectionservice.model.res.CollectionRes;
 import com.collection_service.collectionservice.service.inter.CollectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +23,18 @@ public class CollectionController {
       return collections;
     }
 
+
+    @GetMapping("/list")
+    public List<CollectionRes> getAll() {
+
+        return collectionService.getAllCollection();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public boolean delete(@PathVariable int id) {
+
+        return collectionService.delete(id);
+    }
 
 
 }

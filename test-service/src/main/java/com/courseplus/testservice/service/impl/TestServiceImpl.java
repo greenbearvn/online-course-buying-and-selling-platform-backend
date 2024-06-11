@@ -5,10 +5,13 @@ import com.courseplus.testservice.models.event.TestCreateEvent;
 import com.courseplus.testservice.models.obj.Choice;
 import com.courseplus.testservice.models.obj.Question;
 import com.courseplus.testservice.models.req.TestReq;
+import com.courseplus.testservice.models.res.Profile;
 import com.courseplus.testservice.models.res.QuestionRes;
 import com.courseplus.testservice.models.res.TestRes;
+import com.courseplus.testservice.models.res.TestsRes;
 import com.courseplus.testservice.repository.TestRepository;
 import com.courseplus.testservice.rest.inter.HttpService;
+import com.courseplus.testservice.rest.inter.ProfileRestService;
 import com.courseplus.testservice.service.inter.TestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -17,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.DataInput;
 import java.util.ArrayList;
@@ -41,14 +46,41 @@ public class TestServiceImpl implements TestService {
 
     private final KafkaTemplate<String,TestCreateEvent> kafkaTemplate;
 
+    private final ProfileRestService profileRestService;
+
     @Override
-    public List<Test> getAllTest() {
-        return testRepository.findAll();
+    public Flux<TestsRes> getAllTest() {
+        return Flux.defer(() -> {
+            List<Test> tests = testRepository.findAll();
+
+            return Flux.fromIterable(tests)
+                    .flatMap(item -> {
+
+                        Mono<Profile> profileMono = profileRestService.getProfileById(item.getTeacherId());
+
+
+                        return profileMono.map(p -> TestsRes.testsRes(item, p));
+                    });
+        });
     }
 
     @Override
-    public List<Test> getAllbyTeacherId(int teacherId) {
-        return testRepository.findAllByTeacherId(teacherId);
+    public Flux<TestsRes> getAllbyTeacherId(int teacherId) {
+
+
+
+        return Flux.defer(() -> {
+            List<Test> tests = testRepository.findAllByTeacherId(teacherId);
+
+            return Flux.fromIterable(tests)
+                    .flatMap(item -> {
+
+                        Mono<Profile> profileMono = profileRestService.getProfileById(item.getTeacherId());
+
+
+                        return profileMono.map(p -> TestsRes.testsRes(item, p));
+                    });
+        });
     }
 
     @Override
@@ -80,10 +112,15 @@ public class TestServiceImpl implements TestService {
                 allChoices.addAll(question.getChoices());
             }
 
-            newTest =  testRepository.save(newTest);
 
-            sendDataQuestions(newTest,inputTestReq);
-
+            Optional<Test> test = testRepository.findById(inputTestReq.getTestId());
+            if(test.isPresent()){
+                sendDataQuestions(test.get(),inputTestReq);
+            }
+            else {
+                newTest =  testRepository.save(newTest);
+                sendDataQuestions(newTest,inputTestReq);
+            }
             return true;
         }
         catch (Exception e){
@@ -91,7 +128,6 @@ public class TestServiceImpl implements TestService {
         }
 
     }
-
     private void sendDataQuestions(Test newTest,TestReq testReq){
         TestCreateEvent createEvent = new TestCreateEvent();
 

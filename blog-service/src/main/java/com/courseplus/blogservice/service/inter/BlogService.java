@@ -11,6 +11,8 @@ import java.util.List;
 public interface BlogService {
     public List<Blog> getBlogsIsPublished();
 
+    public List<Blog> getAllByUserId(int id);
+
     public List<Blog> getNewBlogs();
 
     public List<Blog> getRecommendBlogs(int categoryId);

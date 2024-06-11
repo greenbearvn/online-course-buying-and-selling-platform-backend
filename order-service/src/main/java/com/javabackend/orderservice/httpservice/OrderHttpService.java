@@ -3,6 +3,7 @@ package com.javabackend.orderservice.httpservice;
 
 import com.javabackend.orderservice.models.res.CollectionRes;
 import com.javabackend.orderservice.models.res.DetailCollectionRes;
+import com.javabackend.orderservice.models.res.UserRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,6 +17,8 @@ public class OrderHttpService {
     private final WebClient collectionWebClient;
 
     private final WebClient detailCollectionWebClient;
+
+    private final WebClient userWebClient;
 
     public Mono<CollectionRes> getCollectionByUserId(int userId) {
         Mono<CollectionRes> collectionResFlux = collectionWebClient.get()
@@ -31,6 +34,14 @@ public class OrderHttpService {
                 .retrieve()
                 .bodyToMono(DetailCollectionRes.class);
         return detailCollectionResMono;
+    }
+
+    public Mono<UserRes> getDetailUserById(int userId) {
+        Mono<UserRes> detailUser = userWebClient.get()
+                .uri("/id/" + userId)
+                .retrieve()
+                .bodyToMono(UserRes.class);
+        return detailUser;
     }
 
 }

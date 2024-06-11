@@ -3,14 +3,16 @@ package com.courseplus.testservice.service.inter;
 import com.courseplus.testservice.entity.Test;
 import com.courseplus.testservice.models.req.TestReq;
 import com.courseplus.testservice.models.res.TestRes;
+import com.courseplus.testservice.models.res.TestsRes;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
 public interface TestService {
 
-    public List<Test> getAllTest();
+    public Flux<TestsRes> getAllTest();
 
-    public List<Test> getAllbyTeacherId(int teacherId);
+    public Flux<TestsRes> getAllbyTeacherId(int teacherId);
 
     public TestRes getTestById(int id);
 

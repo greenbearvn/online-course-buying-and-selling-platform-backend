@@ -20,4 +20,6 @@ public interface ProfileService {
 
     public String uploadFile(String fileName, MultipartFile file) throws IOException;
     public void displayFile(String fileCode , HttpServletResponse response) throws IOException;
+
+    public boolean delete(int id);
 }

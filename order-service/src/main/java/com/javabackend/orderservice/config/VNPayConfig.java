@@ -16,7 +16,7 @@ import java.util.TimeZone;
 public class VNPayConfig {
 
     private String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    private String vnp_ReturnUrl = "http://localhost:8000/api/v1/payment/vn-pay-callback";
+    private String vnp_ReturnUrl = "http://localhost:4200/payment/success";
     private String vnp_TmnCode = "AU58PTQ0";
     private String secretKey = "NTU9YT6DDPU1O4V7CCKQDK3IKRSXFHAC";
     private String vnp_Version = "2.1.0";

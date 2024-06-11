@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface DetailCateRepository extends JpaRepository<DetailCates, Integer> {
     List<DetailCates> findAllByCateId(int cateId);
+
 }

@@ -54,8 +54,10 @@ public class DetailCatesServiceImpl implements DetailCatesService {
     public DetailCates updateDetailCates(int id, DetailCateReq detailCateReq) {
         DetailCates existItem = detailCateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Level not found"));
-
-        return existItem.builder().detailCateId(id).detailCateName(detailCateReq.getDetailCateName()).cateId(detailCateReq.getCateId()).build();
+        existItem.setDetailCateId(id);
+        existItem.setCateId(detailCateReq.getCateId());
+        existItem.setDetailCateName(detailCateReq.getDetailCateName());
+        return detailCateRepository.save(existItem);
     }
 
     @Override

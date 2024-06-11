@@ -32,6 +32,11 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public List<Blog> getAllByUserId(int id) {
+        return blogRepository.findAllByUserId(id);
+    }
+
+    @Override
     public List<Blog> getNewBlogs() {
         return blogRepository.getNewBlog();
     }

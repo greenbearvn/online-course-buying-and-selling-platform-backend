@@ -7,6 +7,8 @@ import com.javabackend.orderservice.models.obj.DetailOrder;
 import com.javabackend.orderservice.models.req.OrderInfor;
 import com.javabackend.orderservice.models.res.CollectionRes;
 import com.javabackend.orderservice.models.res.DetailCollectionRes;
+import com.javabackend.orderservice.models.res.OrderRes;
+import com.javabackend.orderservice.models.res.UserRes;
 import com.javabackend.orderservice.service.inter.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +57,49 @@ public class OrderServiceImpl implements  OrderService{
         event.setDetailOrder(orderInfor.getDetailOrder());
         event.setType("ORDER_CREATED");
         kafkaTemplate.send("new-order", event);
+    }
+
+    @Override
+    public List<OrderRes> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderRes> allOrderRes = orders.stream().map(c ->{
+            UserRes userRes = orderHttpService.getDetailUserById(c.getUserId()).block();
+
+
+            return OrderRes.orderResBuilder(c,userRes);
+        }).collect(Collectors.toList());
+
+        return allOrderRes;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try{
+            orderRepository.deleteById(id);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public Order detail(int id) {
+        return orderRepository.findById(id).get();
+    }
+
+    @Override
+    public Order update(int id, Order orderReq) {
+
+        Order order = new Order();
+
+        order.setOrderId(id);
+        order.setUserId(orderReq.getUserId());
+        order.setStatus(orderReq.getStatus());
+        order.setCreateAt(orderReq.getCreateAt());
+        order.setMoneyTotal(orderReq.getMoneyTotal());
+
+        orderRepository.save(order);
+        return null;
     }
 }

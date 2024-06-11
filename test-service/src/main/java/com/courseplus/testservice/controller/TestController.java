@@ -6,11 +6,13 @@ import com.courseplus.testservice.models.obj.Choice;
 import com.courseplus.testservice.models.obj.Question;
 import com.courseplus.testservice.models.req.TestReq;
 import com.courseplus.testservice.models.res.TestRes;
+import com.courseplus.testservice.models.res.TestsRes;
 import com.courseplus.testservice.service.inter.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +25,14 @@ public class TestController {
     private final TestService testService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Test>> getAllCategories() {
-        List<Test> items =  testService.getAllTest();
-        return ResponseEntity.ok().body(items);
+    public Flux<TestsRes> getAllTest() {
+        return   testService.getAllTest();
+
     }
 
     @GetMapping("/list/teacher/{id}")
-    public ResponseEntity<List<Test>> getAllByTeacherId(@PathVariable("id") int teacherId) {
-        List<Test> items =  testService.getAllbyTeacherId(teacherId);
+    public ResponseEntity<Flux<TestsRes>> getAllByTeacherId(@PathVariable("id") int teacherId) {
+        Flux<TestsRes> items =  testService.getAllbyTeacherId(teacherId);
         return ResponseEntity.ok().body(items);
     }
 

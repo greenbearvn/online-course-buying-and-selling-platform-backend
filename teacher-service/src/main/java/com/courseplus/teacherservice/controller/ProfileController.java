@@ -68,4 +68,9 @@ public class ProfileController {
     public void displayImage(@PathVariable String fileCode, HttpServletResponse response) throws IOException {
         profileService.displayFile(fileCode, response);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public boolean delete(@PathVariable int id)  {
+        return profileService.delete(id);
+    }
 }

@@ -1,5 +1,6 @@
 package com.courseplus.userservice.models.res;
 
+import com.courseplus.userservice.entity.User;
 import com.courseplus.userservice.models.obj.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
@@ -24,4 +25,14 @@ public class UserRes {
 
     @JsonProperty("role")
     private Role role;
+
+    public static UserRes userResBuilder(User user){
+        return UserRes.builder().
+                userId(user.getUserId())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .role(user.getRole()).build();
+
+
+    }
 }

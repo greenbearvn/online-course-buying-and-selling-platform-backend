@@ -26,9 +26,9 @@ public class BlogController {
         return ResponseEntity.ok().body(items);
     }
 
-    @GetMapping("/list/new")
-    public ResponseEntity<List<Blog>> getNewBlogs() {
-        List<Blog> items =  blogService.getNewBlogs();
+    @GetMapping("/list/userId/{id}")
+    public ResponseEntity<List<Blog>> getAllByUserId(@PathVariable int id) {
+        List<Blog> items =  blogService.getAllByUserId(id);
         return ResponseEntity.ok().body(items);
     }
 

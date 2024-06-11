@@ -17,10 +17,11 @@
         <module name="course-service" />
         <module name="config-server" />
         <module name="auth-service" />
-        <module name="payment-service" />
+        <module name="comment-service" />
         <module name="level-service" />
         <module name="detail_order_service" />
         <module name="video-service" />
+        <module name="tested-service" />
         <module name="lession-service" />
         <module name="api-gateway" />
         <module name="collection-service" />
@@ -35,6 +36,7 @@
       <module name="chat-service" target="17" />
       <module name="department-service" target="17" />
       <module name="patient-service" target="17" />
+      <module name="payment-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -47,6 +49,7 @@
       <module name="chat-service" options="-parameters" />
       <module name="choice-service" options="-parameters" />
       <module name="collection-service" options="-parameters" />
+      <module name="comment-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="course-service" options="-parameters" />
       <module name="department-service" options="-parameters" />
@@ -62,6 +65,7 @@
       <module name="question-service" options="-parameters" />
       <module name="service-registry" options="-parameters" />
       <module name="test-service" options="-parameters" />
+      <module name="tested-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
       <module name="video-service" options="-parameters" />
     </option>

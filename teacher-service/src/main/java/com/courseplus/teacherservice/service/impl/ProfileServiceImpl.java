@@ -92,4 +92,18 @@ public class ProfileServiceImpl implements ProfileService {
         // Copy the file content directly to the response output stream
         Files.copy(filePath, response.getOutputStream());
     }
+
+    @Override
+    public boolean delete(int id) {
+        try{
+
+            profileRepository.deleteById(id);
+            return true;
+
+        }catch (Exception e){
+            return  false;
+        }
+
+
+    }
 }

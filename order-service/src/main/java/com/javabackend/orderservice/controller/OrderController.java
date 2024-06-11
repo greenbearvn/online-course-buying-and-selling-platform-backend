@@ -1,15 +1,22 @@
 package com.javabackend.orderservice.controller;
 
+import com.javabackend.orderservice.data.Order;
+import com.javabackend.orderservice.models.obj.CartItem;
 import com.javabackend.orderservice.models.req.OrderInfor;
+import com.javabackend.orderservice.models.res.OrderRes;
 import com.javabackend.orderservice.models.res.PaymentRes;
 import com.javabackend.orderservice.models.res.ResponseObject;
 import com.javabackend.orderservice.service.inter.OrderService;
 import com.javabackend.orderservice.service.inter.PaymentService;
+import com.javabackend.orderservice.service.inter.SendMailService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,11 +25,42 @@ public class OrderController {
 
     private final OrderService orderService;
     private final PaymentService paymentService;
+    private final SendMailService sendMailService;
+
+    @GetMapping("/list")
+    public List<OrderRes> getAll() {
+
+        return  orderService.getAllOrders();
+    }
+
+    @GetMapping("/detail/{id}")
+    public Order detail(@PathVariable int id) {
+
+        return  orderService.detail(id);
+    }
 
     @PostMapping("/create")
-    public void createOrder(@RequestBody OrderInfor orderReq) {
+    public boolean createOrder(@RequestBody OrderInfor orderReq) {
 
-        orderService.createOrder(orderReq);
+        try {
+            orderService.createOrder(orderReq);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public Order update(@PathVariable int id,@RequestBody Order orderReq) {
+
+        return orderService.update(id,orderReq);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public boolean createOrder(@PathVariable int id) {
+
+        return  orderService.delete(id);
     }
 
     @GetMapping("/payment")
@@ -48,5 +86,12 @@ public class OrderController {
         }
     }
 
+
+
+    @PostMapping("/send-mail")
+    public void sendMail(@RequestParam(name = "email") String email, @RequestBody List<CartItem> cartItems) throws MessagingException {
+
+       sendMailService.sendMail(cartItems,email);
+    }
 
 }

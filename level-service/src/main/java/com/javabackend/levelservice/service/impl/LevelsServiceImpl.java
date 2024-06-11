@@ -55,7 +55,11 @@ public class LevelsServiceImpl implements LevelsService {
         Levels existLevel = levelsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Level not found"));
 
-        return existLevel.builder().idLevels(id).nameLevel(level.getNameLevel()).build();
+        existLevel.setIdLevels(id);
+        existLevel.setNameLevel(level.getNameLevel());
+
+        return  levelsRepository.save(existLevel);
+
     }
 
     @Override

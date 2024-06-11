@@ -8,6 +8,7 @@ import com.course_service.courseservice.models.res.ImageRes;
 import com.course_service.courseservice.service.Inter.CartService;
 import com.course_service.courseservice.service.Inter.CoursesService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -30,8 +31,8 @@ public class CoursesController {
     private final CartService cartService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Courses>> getAllCategories() {
-        List<Courses> items =  coursesService.getAllCourses();
+    public ResponseEntity<List<CourseRes>> getAllCategories() {
+        List<CourseRes> items =  coursesService.getAllCourses();
         return ResponseEntity.ok().body(items);
     }
 
@@ -41,14 +42,22 @@ public class CoursesController {
         return ResponseEntity.ok().body(items);
     }
 
+    @GetMapping("/list/teacher/{id}")
+    public ResponseEntity<List<CourseRes>> getListByProfileId(@PathVariable int id) {
+        List<CourseRes> items =  coursesService.getAllCourseByProfileId(id);
+        return ResponseEntity.ok().body(items);
+    }
+
     @GetMapping("/detail/{id}")
     public Object getDetailCourses(@PathVariable int id) {
-        try {
-            Mono<CourseRes> item = coursesService.getCoursesById(id);
-            return ResponseEntity.ok().body(item.block());
-        } catch (Exception e) {
-            return  coursesService.detail(id);
-        }
+//        try {
+//
+//        } catch (Exception e) {
+//            return  coursesService.detail(id);
+//        }
+
+        Mono<CourseRes> item = coursesService.getCoursesById(id);
+        return ResponseEntity.ok().body(item.block());
 
     }
 

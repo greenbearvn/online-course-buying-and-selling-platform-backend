@@ -2,13 +2,11 @@ package com.detailcollection.detailcollectionservice.controller;
 
 
 import com.detailcollection.detailcollectionservice.entity.DetailCollection;
+import com.detailcollection.detailcollectionservice.model.obj.DetailCollectionRes;
 import com.detailcollection.detailcollectionservice.service.inter.DetailCollectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,4 +24,21 @@ public class DetailCollectionCotroller {
         return ResponseEntity.ok().body(detailCollection);
 
     }
+
+    @GetMapping("/detail")
+    public ResponseEntity<DetailCollection> getDetailCollection(@RequestParam("collectionId") int collectionId, @RequestParam("courseId") int courseId) {
+
+        DetailCollection detailCollection = detailCollectionService.getDetailCollection(collectionId, courseId);
+        return ResponseEntity.ok().body(detailCollection);
+
+    }
+
+    @GetMapping("/colllection/{collectionId}")
+    public ResponseEntity<List<DetailCollectionRes>> getAllByCollectionId(@PathVariable("collectionId") int collectionId) {
+
+        List<DetailCollectionRes> detailCollection = detailCollectionService.getDetailCollectionByCollectionId(collectionId);
+        return ResponseEntity.ok().body(detailCollection);
+
+    }
+
 }

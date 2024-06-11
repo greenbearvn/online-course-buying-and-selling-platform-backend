@@ -1,6 +1,7 @@
 package com.course_service.courseservice.models.res;
 
 
+
 import com.course_service.courseservice.entity.Courses;
 import com.course_service.courseservice.models.obj.DetailCate;
 import com.course_service.courseservice.models.obj.Levels;
@@ -31,7 +32,7 @@ public class CourseRes {
 
 
 
-    public  static  CourseRes fromCourseRes(Courses courseRes, List<LessionRes> lessionRes,DetailCate detailCate ,Levels levels, Profile profile){
+    public  static  CourseRes fromCourseRes(Courses courseRes, List<LessionRes> lessionRes, DetailCate detailCate , Levels levels, Profile profile){
         return  CourseRes.builder()
                 .courses(courseRes)
                 .levels(levels)

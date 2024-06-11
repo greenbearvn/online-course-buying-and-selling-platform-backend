@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -36,25 +37,26 @@ public class CreateQuestionComponent {
             TestCreateEvent testCreateEvent = objectMapper.readValue(event, TestCreateEvent.class);
 
             int testId = testCreateEvent.getTestReq().getTestId();
-
             List<QuestionRes> questionResList = testCreateEvent.getTestReq().getQuestions();
 
-            questionResList.forEach(q ->{
-                Question question = Question.builder()
-                        .testId(testId)
-                        .questionDescription(q.getQuestionDescription())
-                        .suggestion(q.getSuggestion())
-                        .build();
+            for (QuestionRes q : questionResList) {
+                Optional<Question> detailQuestion = questionService.getDetailQuestion(q.getQuestionId());
+                if (detailQuestion.isEmpty()) {
+                    Question question = Question.builder()
+                            .testId(testId)
+                            .questionDescription(q.getQuestionDescription())
+                            .suggestion(q.getSuggestion())
+                            .build();
 
-                question = questionService.createQuestion(question);
-                for (Choice c : q.getChoices()) {
-                    c.setQuestionId(question.getQuestionId());
-                    ChoiceCreateEvent choiceCreateEvent = new ChoiceCreateEvent();
-                    choiceCreateEvent.setChoice(c);
-                    kafkaTemplate.send(CREATE_CHOICE_TOPIC, choiceCreateEvent);
+                    question = questionService.createQuestion(question);
+                    for (Choice c : q.getChoices()) {
+                        c.setQuestionId(question.getQuestionId());
+                        ChoiceCreateEvent choiceCreateEvent = new ChoiceCreateEvent();
+                        choiceCreateEvent.setChoice(c);
+                        kafkaTemplate.send(CREATE_CHOICE_TOPIC, choiceCreateEvent);
+                    }
                 }
-
-            });
+            }
 
         } catch (JsonProcessingException e) {
             // Handle JSON processing exception
@@ -64,6 +66,7 @@ public class CreateQuestionComponent {
             e.printStackTrace(); // Or log the error
         }
     }
+
 
 
 

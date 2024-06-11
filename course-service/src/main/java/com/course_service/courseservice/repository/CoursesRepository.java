@@ -8,8 +8,13 @@ import java.util.List;
 
 public interface CoursesRepository extends JpaRepository<Courses,Integer> {
 
-    @Query(value = "SELECT c.idDetailCate FROM Courses c WHERE c.courseId == ?1", nativeQuery = true)
+    @Query(value = "SELECT id_detail_cate FROM courses c WHERE c.course_id = ?1", nativeQuery = true)
     public int findIdDetailLevelByCourseId(int courseId);
 
+
     public List<Courses> findAllByIdDetailCate(int detailCateId);
+
+    public List<Courses> findAllByProfileId(int id);
+
+
 }

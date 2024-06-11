@@ -45,31 +45,43 @@ public class CourseServiceImpl implements CoursesService {
 
 
     @Override
-    public List<Courses> getAllCourses() {
-        return coursesRepository.findAll();
+    public List<CourseRes> getAllCourses() {
+
+        List<Courses> courses = coursesRepository.findAll();
+
+        return convertListCoursetoListCourseRes(courses);
     }
 
 
     @Override
     public Mono<CourseRes> getCoursesById(int id) {
 
-        Mono<Courses> courseMono = Mono.just(coursesRepository.findById(id).orElseThrow());
+        Mono<Courses> courseMono = Mono.justOrEmpty(coursesRepository.findById(id))
+                .switchIfEmpty(Mono.error(new RuntimeException("Course not found")));
+
         Flux<LessionRes> lessionResFlux = httpBinService.getLessions(id);
-        Mono<DetailCate> detailCateMono = httpBinService.getDetailCate(id);
-        Mono<Levels> levelsMono = httpBinService.getLevelOfCourse(id);
-        Mono<Profile> profileMono = httpBinService.getDetailTeacherOfCourse(id);
+        Mono<DetailCate> detailCateMono = courseMono.flatMap(course -> httpBinService.getDetailCate(course.getIdDetailCate()));
+        Mono<Levels> levelsMono = courseMono.flatMap(course -> httpBinService.getLevelOfCourse(course.getIdLevel()));
+        Mono<Profile> profileMono = courseMono.flatMap(course -> httpBinService.getDetailTeacherOfCourse(course.getProfileId()));
 
         return Mono.zip(courseMono, lessionResFlux.collectList(), detailCateMono, levelsMono, profileMono)
                 .map(tuple -> {
+                    Courses course = tuple.getT1();
+                    List<LessionRes> lessionResList = tuple.getT2();
+                    DetailCate detailCate = tuple.getT3();
+                    Levels levels = tuple.getT4();
+                    Profile profile = tuple.getT5();
+
                     CourseRes courseRes = new CourseRes();
-                    courseRes.setCourses(tuple.getT1());
-                    courseRes.setLessionRes(tuple.getT2());
-                    courseRes.setDetailCate(tuple.getT3());
-                    courseRes.setLevels(tuple.getT4());
-                    courseRes.setProfile(tuple.getT5());
+                    courseRes.setCourses(course);
+                    courseRes.setLessionRes(lessionResList);
+                    courseRes.setDetailCate(detailCate);
+                    courseRes.setLevels(levels);
+                    courseRes.setProfile(profile);
                     return courseRes;
                 });
     }
+
 
     @Override
     public Courses detail(int id) {
@@ -120,6 +132,7 @@ public class CourseServiceImpl implements CoursesService {
         existItem.setPercentSale(coursesReq.getPercentSale());
         existItem.setNewPrice(newPrice);
         existItem.setIdLevel(coursesReq.getIdLevel());
+        existItem.setStatus(coursesReq.getStatus());
         existItem.setIdDetailCate(coursesReq.getIdDetailCate());
 
         return coursesRepository.save(existItem);
@@ -186,6 +199,14 @@ public class CourseServiceImpl implements CoursesService {
         int detailCateId = coursesRepository.findIdDetailLevelByCourseId(courseId);
 
         List<Courses> courses = coursesRepository.findAllByIdDetailCate(detailCateId);
+
+        return convertListCoursetoListCourseRes(courses);
+    }
+
+    @Override
+    public List<CourseRes> getAllCourseByProfileId(int id) {
+
+        List<Courses> courses = coursesRepository.findAllByProfileId(id);
 
         return convertListCoursetoListCourseRes(courses);
     }

@@ -36,9 +36,9 @@ spring:
             - Path=/api/v1/videos/**
 
         - id: level-service
-          uri: http://localhost:8086/
+          uri: http://localhost:8081/
           predicates:
-            - Path=/api/v1/videos/**
+            - Path=/api/v1/levels/**
 
         - id: detail-cate-service
           uri: http://localhost:8083/
@@ -84,3 +84,33 @@ spring:
           uri: http://localhost:8089/
           predicates:
             - Path=/api/v1/order/**
+
+        - id: auth-service
+          uri: http://localhost:8100/
+          predicates:
+            - Path=/api/auth/**
+
+        - id: collection-service
+          uri: http://localhost:8087/
+          predicates:
+            - Path=/api/v1/collections/**
+
+        - id: detail-collection-service
+          uri: http://localhost:8091/
+          predicates:
+            - Path=/api/v1/detailcollection/**
+
+        - id: detail-order-service
+          uri: http://localhost:8090/
+          predicates:
+            - Path=/api/v1/detail-order/**
+
+        - id: comment-service
+          uri: http://localhost:8102/
+          predicates:
+            - Path=/api/v1/comment/**
+
+        - id: tested-service
+          uri: http://localhost:8103/
+          predicates:
+            - Path=/api/tested/**

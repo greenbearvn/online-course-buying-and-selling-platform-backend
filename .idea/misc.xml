@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
@@ -34,6 +33,8 @@
         <option value="$PROJECT_DIR$/auth-service/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/chat-service/pom.xml" />
+        <option value="$PROJECT_DIR$/comment-service/pom.xml" />
+        <option value="$PROJECT_DIR$/tested-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
@@ -42,6 +43,7 @@
         <option value="$PROJECT_DIR$/department-service/pom.xml" />
         <option value="$PROJECT_DIR$/patient-command-service/pom.xml" />
         <option value="$PROJECT_DIR$/patient-service/pom.xml" />
+        <option value="$PROJECT_DIR$/payment-service/pom.xml" />
       </set>
     </option>
   </component>

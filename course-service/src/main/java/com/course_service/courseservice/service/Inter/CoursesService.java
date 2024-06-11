@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface CoursesService {
-    public List<Courses> getAllCourses();
+    public List<CourseRes> getAllCourses();
 
 
 //    public CourseRes getCoursesById(int id);
@@ -36,5 +36,9 @@ public interface CoursesService {
     public List<CourseRes> getListProduct();
 
     public List<CourseRes> getCoursesRecommend(int courseId);
+
+
+    public List<CourseRes> getAllCourseByProfileId(int id);
+
 
 }

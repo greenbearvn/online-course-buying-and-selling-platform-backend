@@ -113,9 +113,10 @@ public class CategoriesServiceImpl implements CategoriesService {
         Categories existLevel = categoriesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Level not found"));
 
-        return existLevel.builder().categoryId(id)
-                .categoryName(categories.getCategoryName())
-                .image(categories.getImage()).build();
+        existLevel.setCategoryName(categories.getCategoryName());
+        existLevel.setImage(categories.getImage());
+
+         return categoriesRepository.save(existLevel);
 
     }
 
